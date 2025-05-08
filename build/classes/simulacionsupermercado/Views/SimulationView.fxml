@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="simulacionsupermercado.Controllers.SimulationController">
+   <children>
+      <Button fx:id="addQueue" layoutX="33.0" layoutY="519.0" mnemonicParsing="false" onAction="#generateQueue" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: blue;" text="Iniciar" textFill="WHITE" />
+      <Button layoutX="222.0" layoutY="519.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: red;" text="Detener" textFill="WHITE" />
+      <Button layoutX="410.0" layoutY="519.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: orange;" text="Reiniciar" textFill="WHITE" />
+      <Slider layoutX="716.0" layoutY="531.0" />
+      <Pane fx:id="register1" layoutX="34.0" layoutY="200.0" prefHeight="251.0" prefWidth="401.0" style="-fx-background-color: skyblue;">
+         <children>
+            <TextField layoutX="60.0" layoutY="55.0" text="CAJA 1" />
+         </children>
+      </Pane>
+      <Pane fx:id="register2" layoutX="480.0" layoutY="200.0" prefHeight="251.0" prefWidth="401.0" style="-fx-background-color: green;">
+         <children>
+            <TextField layoutX="116.0" layoutY="54.0" text="CAJA 2" />
+            <Circle fx:id="valueRegister1" fill="GREEN" layoutX="189.0" layoutY="159.0" radius="59.0" stroke="GREEN" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane fx:id="container_stack" layoutX="33.0" layoutY="29.0" prefHeight="118.0" prefWidth="853.0" style="-fx-background-color: #ccc;" />
+   </children>
+</AnchorPane>
