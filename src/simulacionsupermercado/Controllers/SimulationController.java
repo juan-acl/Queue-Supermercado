@@ -27,7 +27,7 @@ public class SimulationController implements Initializable {
 
     private IntegerProperty countQueue = new SimpleIntegerProperty(0);
 
-    private final int MAX_QUEUES = 10;
+    private final int MAX_QUEUES = 5;
     private final int MMS_BY_ARTICLE = 2000;
 
     private Circle[] queueCircles;
@@ -73,12 +73,11 @@ public class SimulationController implements Initializable {
                 addQueue.setStyle("-fx-background-color: #4CAF50;");
             }
 
-            // Gestionar el estado del timer basado en si hay elementos en la cola
             if (newCount > 0 && !isTimerRunning) {
-                // Iniciar el timer si hay elementos en la cola y no está corriendo
+
                 startSimulationTimer();
             } else if (newCount == 0 && isTimerRunning) {
-                // Detener el timer si no hay elementos y estaba corriendo
+
                 stopSimulationTimer();
                 mostrarAlertaInformacion("No hay clientes en cola",
                         "Clientes atendidos correctamente",
@@ -87,7 +86,7 @@ public class SimulationController implements Initializable {
         });
 
         // Generar colas iniciales
-        generateInitialQueues();
+        generateInitialQueues(MAX_QUEUES);
     }
 
     /**
@@ -95,18 +94,17 @@ public class SimulationController implements Initializable {
      */
     private void startSimulationTimer() {
         if (isTimerRunning) {
-            return; // Evitar iniciar múltiples timers
+            return;
         }
 
-        simulationTimer = new Timer(true); // Timer como daemon para que no bloquee la aplicación
+        simulationTimer = new Timer(true);
         TimerTask simulationTask = new TimerTask() {
             @Override
             public void run() {
-                // Ejecutar las tareas de simulación en el hilo de JavaFX
                 Platform.runLater(() -> {
                     System.out.println("Ejecución... Clientes en cola: " + countQueue.get());
                     assignQueue();
-                    // Solo remover un cliente cada vez que se ejecuta la tarea
+
                     if (countQueue.get() > 0) {
                         removeQueue();
                     }
@@ -139,7 +137,7 @@ public class SimulationController implements Initializable {
         try {
             if (countQueue.get() > 0) {
                 valueRegister1.setStyle("-fx-fill: #1e90ff;");
-                // Aquí puedes agregar lógica adicional para manejar la asignación de colas
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,12 +177,9 @@ public class SimulationController implements Initializable {
         alert.showAndWait();
     }
 
-    public void generateInitialQueues() {
+    public void generateInitialQueues(int initialQueues) {
         // Reiniciar el contador
         countQueue.set(0);
-
-        // Mostrar 5 colas iniciales
-        int initialQueues = 5;
         for (int i = 0; i < initialQueues; i++) {
             if (i < MAX_QUEUES) {
                 queueCircles[i].setVisible(true);
@@ -202,7 +197,6 @@ public class SimulationController implements Initializable {
                 return;
             }
 
-            // Simplemente hacemos visible el siguiente círculo
             queueCircles[countQueue.get()].setVisible(true);
 
             // Incrementar la propiedad
@@ -213,10 +207,8 @@ public class SimulationController implements Initializable {
         }
     }
 
-    // Método para eliminar una cola
     public void removeQueue() {
         if (countQueue.get() > 0) {
-            // Ocultar el último círculo visible
             queueCircles[countQueue.get() - 1].setVisible(false);
             countQueue.set(countQueue.get() - 1);
         }
@@ -226,12 +218,10 @@ public class SimulationController implements Initializable {
         this.primaryStage = (simulacionSupermercado);
     }
 
-    // Método para obtener el valor actual del contador
     public int getQueueCount() {
         return countQueue.get();
     }
 
-    // Método para limpiar recursos al cerrar la aplicación
     public void cleanup() {
         stopSimulationTimer();
     }
