@@ -12,16 +12,20 @@ public class Client {
 
     private int quantity;
     private String nombre;
+    private String nit;
     private String identifier;
+    private int durationMS;
 
     private Client() {
 
     }
 
-    public Client(int quantity, String nombre, String identifier) {
+    public Client(int quantity, String nombre, String identifier, int durationMS, String nit) {
         this.quantity = quantity;
         this.nombre = nombre;
         this.identifier = identifier;
+        this.nit = nit;
+        this.durationMS = durationMS;
     }
 
     public int getQuantity() {
@@ -48,5 +52,20 @@ public class Client {
         this.identifier = identifier;
     }
 
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+
+    public void setDurationMs(int durationMS) {
+        this.durationMS = durationMS;
+    }
+
+    public String getNit() {
+        return this.nit;
+    }
+
+    public int getDurationMS() {
+        return this.durationMS;
+    }
 
 }
