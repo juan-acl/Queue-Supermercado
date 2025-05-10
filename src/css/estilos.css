@@ -1,0 +1,5 @@
+.fondo-pane {
+    -fx-background-image: url("/images/fondo.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}

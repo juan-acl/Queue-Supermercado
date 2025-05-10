@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.shape.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="simulacionsupermercado.Controllers.SimulationController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" styleClass="fondo-pane" stylesheets="@/css/estilos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simulacionsupermercado.Controllers.SimulationController">
    <children>
-      <Button fx:id="addQueue" layoutX="33.0" layoutY="519.0" mnemonicParsing="false" onAction="#generateQueue" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: blue;" text="Iniciar" textFill="WHITE" />
-      <Button layoutX="222.0" layoutY="519.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: red;" text="Detener" textFill="WHITE" />
-      <Button layoutX="410.0" layoutY="519.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="111.0" style="-fx-background-color: orange;" text="Reiniciar" textFill="WHITE" />
-      <Slider layoutX="716.0" layoutY="531.0" />
-      <Pane fx:id="register1" layoutX="34.0" layoutY="200.0" prefHeight="251.0" prefWidth="401.0" style="-fx-background-color: skyblue;">
+      <!-- Botones -->
+      <Button fx:id="toggleBtn" layoutX="222.0" layoutY="519.0" text="Detener" onAction="#pausarOReanudarSimulacion" />
+      <Button layoutX="410.0" layoutY="519.0" text="Reiniciar" onAction="#reiniciarSimulacion" />
+
+      <!-- Caja 1 -->
+      <Pane fx:id="register1" layoutX="33.0" layoutY="240.0" prefHeight="251.0" prefWidth="401.0" style="-fx-background-color: transparent;">
          <children>
-            <TextField layoutX="60.0" layoutY="55.0" text="CAJA 1" />
+            <TextField layoutX="238.0" layoutY="212.0" text="CAJA 1" />
+            <ImageView fx:id="valueRegister1" fitHeight="80.0" fitWidth="80.0" layoutX="160.0" layoutY="100.0" preserveRatio="true" />
+            <Label fx:id="infoCaja1" layoutX="20.0" layoutY="200.0" text="" textFill="white" />
          </children>
       </Pane>
-      <Pane fx:id="register2" layoutX="480.0" layoutY="200.0" prefHeight="251.0" prefWidth="401.0" style="-fx-background-color: green;">
+
+      <!-- Caja 2 -->
+      <Pane fx:id="register2" layoutX="485.0" layoutY="240.0" prefHeight="251.0" prefWidth="401.0" style="-fx-background-color: transparent;">
          <children>
-            <TextField layoutX="116.0" layoutY="54.0" text="CAJA 2" />
-            <Circle fx:id="valueRegister1" fill="GREEN" layoutX="189.0" layoutY="159.0" radius="59.0" stroke="GREEN" strokeType="INSIDE" />
+            <TextField layoutX="39.0" layoutY="212.0" text="CAJA 2" />
+            <ImageView fx:id="valueRegister2" fitHeight="80.0" fitWidth="80.0" layoutX="160.0" layoutY="100.0" preserveRatio="true" />
+            <Label fx:id="infoCaja2" layoutX="20.0" layoutY="200.0" text="" textFill="white" />
          </children>
       </Pane>
-      <Pane fx:id="container_stack" layoutX="33.0" layoutY="29.0" prefHeight="118.0" prefWidth="853.0" style="-fx-background-color: #ccc;" />
+
+      <!-- Contenedor de colas -->
+      <Pane fx:id="container_stack" layoutX="33.0" layoutY="76.0" prefHeight="118.0" prefWidth="853.0" style="-fx-background-color: transparent;" />
    </children>
 </AnchorPane>
