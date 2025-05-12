@@ -1,8 +1,7 @@
 package simulacionsupermercado.Controllers;
 
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.List;
 
@@ -11,51 +10,57 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import simulacionsupermercado.SimulacionSupermercado;
 import queue.Client;
 import queue.ClientVisual;
+import queue.Queue;
+import utils.Constants;
 
 public class SimulationController implements Initializable {
 
     private SimulacionSupermercado primaryStage;
 
-    private final int MAX_QUEUES = 5;
-    private final int MMS_BY_ARTICLE = 2000;
+    private final String RESOURCE_IMAGE = "/images/cliente.png";
+    private SimulacionSupermercado stage;
 
     private IntegerProperty countQueue = new SimpleIntegerProperty(0);
-    private Queue<ClientVisual> colaClientes = new LinkedList<>();
-    private List<Client> clientesOriginales = new LinkedList<>();
+    private Queue colaClientes = new Queue();
+    private Client[] clientesOriginales = new Client[0];
 
     private boolean caja1Libre = true;
     private boolean caja2Libre = true;
     private boolean simulacionPausada = false;
 
-    @FXML private Pane container_stack;
-    @FXML private Button toggleBtn;
-    //@FXML private Button addQueue; // puede estar oculto si ya no se usa
-    @FXML private Pane register1;
-    @FXML private Pane register2;
-    @FXML private ImageView valueRegister1;
-    @FXML private ImageView valueRegister2;
-    @FXML private Label infoCaja1;
-    @FXML private Label infoCaja2;
+    @FXML
+    private Pane container_stack;
+    @FXML
+    private Button toggleBtn;
+    @FXML
+    private Pane register1;
+    @FXML
+    private Pane register2;
+    @FXML
+    private ImageView valueRegister1;
+    @FXML
+    private ImageView valueRegister2;
+    @FXML
+    private Label infoCaja1;
+    @FXML
+    private Label infoCaja2;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    // Ya no se necesita observar countQueue porque no hay botón que dependa de él
-}
+
+    }
 
     @FXML
     public void pausarOReanudarSimulacion() {
@@ -68,30 +73,33 @@ public class SimulationController implements Initializable {
         }
     }
 
-   @FXML
+    @FXML
     public void reiniciarSimulacion() {
-    // 1. Limpiar el contenedor visual de clientes
-    container_stack.getChildren().removeIf(n -> n instanceof ImageView && n != valueRegister1 && n != valueRegister2);
+        // 1. Limpiar el contenedor visual de clientes
+        container_stack.getChildren().removeIf(n -> n instanceof ImageView && n != valueRegister1 && n != valueRegister2);
 
-    // 2. Limpiar estado de cajas y etiquetas
-    valueRegister1.setVisible(false);
-    valueRegister2.setVisible(false);
-    infoCaja1.setVisible(false);
-    infoCaja2.setVisible(false);
-    caja1Libre = true;
-    caja2Libre = true;
-    simulacionPausada = false;
+        // 2. Limpiar estado de cajas y etiquetas
+        valueRegister1.setVisible(false);
+        valueRegister2.setVisible(false);
+        infoCaja1.setVisible(false);
+        infoCaja2.setVisible(false);
+        caja1Libre = true;
+        caja2Libre = true;
+        simulacionPausada = false;
 
-    // 3. Limpiar cola y contador
-    colaClientes.clear();
-    countQueue.set(0);
+        // 3. Limpiar cola y contador
+        colaClientes.clear();
+        countQueue.set(0);
 
-    // 4. Volver a cargar los clientes originales
-    recibirClientes(clientesOriginales);
-}
+        // 4. Volver a cargar los clientes originales
+        recibirClientes(Arrays.asList(this.clientesOriginales));
+
+    }
 
     private void asignarClienteACaja() {
-        if (simulacionPausada) return;
+        if (simulacionPausada) {
+            return;
+        }
 
         if (colaClientes.isEmpty()) {
             if (caja1Libre && caja2Libre) {
@@ -119,8 +127,11 @@ public class SimulationController implements Initializable {
     }
 
     private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor, Label info, int numeroCaja) {
+        if (cliente == null) {
+            // Validamos porque se cambio de una lista enlazada con un tama;o ajustable a uno fijo
+            return;
+        }
         ImageView imagen = cliente.getImagen();
-
         TranslateTransition trans = new TranslateTransition(Duration.seconds(1.5), imagen);
         double destinoX = caja.getLayoutX() + 180 - imagen.getLayoutX();
         double destinoY = caja.getLayoutY() + 100 - imagen.getLayoutY();
@@ -146,8 +157,11 @@ public class SimulationController implements Initializable {
                 Platform.runLater(() -> {
                     visor.setVisible(false);
                     info.setVisible(false);
-                    if (numeroCaja == 1) caja1Libre = true;
-                    else caja2Libre = true;
+                    if (numeroCaja == 1) {
+                        caja1Libre = true;
+                    } else {
+                        caja2Libre = true;
+                    }
                     asignarClienteACaja();
                 });
             }).start();
@@ -157,15 +171,15 @@ public class SimulationController implements Initializable {
     }
 
     public void recibirClientes(List<Client> clientes) {
-        this.clientesOriginales = new LinkedList<>(clientes);
+        this.clientesOriginales = clientes.toArray(new Client[0]);;
         this.colaClientes.clear();
         for (int i = 0; i < clientes.size(); i++) {
             Client c = clientes.get(i);
-            double spacing = container_stack.getPrefWidth() / (MAX_QUEUES + 1);
+            double spacing = container_stack.getPrefWidth() / (Constants.QUEUE_MAX_CLIENTS + 1);
             double x = spacing * (i + 1);
             double y = 50;
 
-            Image img = new Image(getClass().getResource("/images/cliente.png").toExternalForm());
+            Image img = new Image(getClass().getResource(RESOURCE_IMAGE).toExternalForm());
             ClientVisual visual = new ClientVisual(c, img, x, y);
             container_stack.getChildren().add(visual.getImagen());
             visual.getImagen().setVisible(true);
@@ -174,14 +188,6 @@ public class SimulationController implements Initializable {
 
         countQueue.set(clientes.size());
         asignarClienteACaja();
-    }
-
-    private void mostrarAlerta(String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Información");
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     public void SetPrimaryStage(SimulacionSupermercado simulacionSupermercado) {

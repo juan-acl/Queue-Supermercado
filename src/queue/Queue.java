@@ -4,53 +4,75 @@
  */
 package queue;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author juanchuc
  */
 public class Queue {
 
-    private int MAX_QUEUE = 4;
-    private final ArrayList<Client> clients = new ArrayList<Client>();
+    private int MAX_QUEUE = 4; // Cantidad de clientes en la cola
+    private int index = 0; // Indice que apunta a la posicion del arreglo de cada elemento
+    private int first = 0; // Primero de la cola
+    private ClientVisual[] clients;
 
-    private boolean isEmpty() {
-        return this.clients.size() == 0;
+    public Queue() {
+        this.clients = new ClientVisual[this.MAX_QUEUE];
     }
 
-    // Encolar cliente
-    public void enqueue(Client client) {
-        this.clients.add(client);
+    public void add(ClientVisual client) {
+        if (this.isFull()) {
+            return;
+        }
+        this.clients[index] = client;
+        this.index++;
     }
 
-    // Remover de la cola
-    public Client dequeue() {
-        return this.isEmpty() ? null : this.clients.remove(0);
+    public ClientVisual poll() {
+        if (this.isEmpty()) {
+            return null;
+        }
+
+        ClientVisual copy = this.clients[first];
+        this.clients[first] = null;
+        this.first++;
+
+        if (this.isEmpty()) {
+            this.first = 0;
+            this.index = 0;
+        }
+        return copy;
     }
 
-    // Obtener el primero de la cola sin eliminarlo
-    public Client peek() {
-        return this.isEmpty() ? null : this.clients.get(0);
+    public void batchQueue(ClientVisual[] clients) {
+        if (this.isFull()) {
+            return;
+        }
+        this.clear();
+        for (ClientVisual client : clients) {
+            this.add(client);
+        }
     }
 
-    public int size() {
-        return this.clients.size();
+    public ClientVisual peek() {
+        return this.isEmpty() ? null : this.clients[first];
     }
 
     public boolean isFull() {
-        return this.size() >= this.MAX_QUEUE;
+        return this.size() == this.MAX_QUEUE;
     }
 
-    // Agregar a la cola por medio de batch
-    public void batchEnqueue(ArrayList<Client> clients) {
-        if (clients.size() + this.size() > this.MAX_QUEUE) {
-            throw new IllegalStateException(
-                    "No hay espacio para encolar " + clients.size()
-                    + " clientes (capacidad: " + MAX_QUEUE + ")"
-            );
-        }
-        this.clients.addAll(clients);
+    public boolean isEmpty() {
+        return this.size() == 0;
+    }
+
+    public int size() {
+        return this.index - this.first;
+    }
+
+    public void clear() {
+        this.clients = new ClientVisual[this.MAX_QUEUE];
+        this.index = 0;
+        this.first = 0;
     }
 
 }
