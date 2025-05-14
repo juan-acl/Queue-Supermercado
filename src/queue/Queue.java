@@ -10,7 +10,7 @@ package queue;
  */
 public class Queue {
 
-    private int MAX_QUEUE = 4; // Cantidad de clientes en la cola
+    private int MAX_QUEUE = 5; // Cantidad de clientes en la cola
     private int index = 0; // Indice que apunta a la posicion del arreglo de cada elemento
     private int first = 0; // Primero de la cola
     private ClientVisual[] clients;

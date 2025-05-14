@@ -43,7 +43,7 @@ public class SimulacionSupermercado extends Application {
     public void getViewSimulation(List<Client> client) {
         try {
             SimulationController simulationController = (SimulationController) getSceneFXML("SimulationView.fxml");
-            this.stage.setTitle("Simulacion de clientes pagando el caja");
+            this.stage.setTitle("Simulacion de clientes pagando en caja");
             simulationController.recibirClientes(client);
             simulationController.SetPrimaryStage(this);
 

@@ -15,6 +15,6 @@ public final class Constants {
     }
 
     public static final int CLIENT_TIME_PER_ARTICLE_MS = 2000;
-    public static final int QUEUE_MAX_CLIENTS = 4;
+    public static final int QUEUE_MAX_CLIENTS = 5;
 
 }

@@ -10,6 +10,10 @@ package queue;
  */
 public class Client {
 
+    private int tiempoEnCola;
+    private int correlativo;
+    private String horaAtencion;
+    private String tiempoAtencion;
     private int quantity;
     private String nombre;
     private String nit;
@@ -68,4 +72,44 @@ public class Client {
         return this.durationMS;
     }
 
+    public int getCorrelativo() {
+        return correlativo;
+    }
+
+    public void setCorrelativo(int correlativo) {
+        this.correlativo = correlativo;
+    }
+
+    public String getHoraAtencion() {
+        return horaAtencion;
+    }
+
+    public void setHoraAtencion(String horaAtencion) {
+        this.horaAtencion = horaAtencion + " hrs";
+    }
+
+    public String getTiempoAtencion() {
+        return tiempoAtencion;
+    }
+
+    public void setTiempoAtencion(String tiempoAtencion) {
+        this.tiempoAtencion = tiempoAtencion;
+    }
+
+    public String getTiempoAtencionString() {
+        int tiempoSegundos = quantity * 2;
+        return tiempoSegundos + " s";
+    }
+
+    public int getTiempoAtencionSegundos() {
+        return quantity * 2;
+    }
+
+    public void setTiempoEnCola(int tiempoEnCola) {
+        this.tiempoEnCola = tiempoEnCola;
+    }
+
+    public int getTiempoEnCola() {
+        return tiempoEnCola;
+    }
 }

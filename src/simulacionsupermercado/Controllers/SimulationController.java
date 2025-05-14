@@ -24,11 +24,21 @@ import queue.Client;
 import queue.ClientVisual;
 import queue.Queue;
 import utils.Constants;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class SimulationController implements Initializable {
 
     private SimulacionSupermercado primaryStage;
-
+    @FXML
+    private AnchorPane mainPane;
     private final String RESOURCE_IMAGE = "/images/cliente.png";
     private SimulacionSupermercado stage;
 
@@ -147,6 +157,9 @@ public class SimulationController implements Initializable {
             info.setText(datos.getNombre() + " - " + datos.getQuantity() + " artículos");
             info.setVisible(true);
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            String horaActual = LocalTime.now().format(formatter);
+            datos.setHoraAtencion(horaActual);
             new Thread(() -> {
                 try {
                     Thread.sleep(datos.getDurationMS());
@@ -173,7 +186,7 @@ public class SimulationController implements Initializable {
     public void recibirClientes(List<Client> clientes) {
         this.clientesOriginales = clientes.toArray(new Client[0]);;
         this.colaClientes.clear();
-        for (int i = 0; i < clientes.size(); i++) {
+        for (int i = 0; i < clientes.size() ; i++) {
             Client c = clientes.get(i);
             double spacing = container_stack.getPrefWidth() / (Constants.QUEUE_MAX_CLIENTS + 1);
             double x = spacing * (i + 1);
@@ -193,4 +206,53 @@ public class SimulationController implements Initializable {
     public void SetPrimaryStage(SimulacionSupermercado simulacionSupermercado) {
         this.primaryStage = simulacionSupermercado;
     }
+
+    @FXML
+ private void viewStatistics(ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulacionsupermercado/views/StatisticsView.fxml"));
+        Parent root = loader.load();
+
+        StatisticsController controller = loader.getController();
+
+        List<Client> clientes = Arrays.asList(this.clientesOriginales);
+
+        int acumulador = 0;
+        for (Client c : clientes) {
+            c.setTiempoEnCola(acumulador);
+            acumulador += c.getDurationMS();
+        }
+
+        double promedioCaja = clientes.stream().mapToInt(Client::getDurationMS).average().orElse(0) / 1000.0;
+
+        double totalCola = 0;
+        int maxColaMS = 0;
+        Client clienteMasTiempoCola = null;
+
+        for (Client c : clientes) {
+            int tiempo = c.getTiempoEnCola();
+            totalCola += tiempo;
+            if (tiempo > maxColaMS) {
+                maxColaMS = tiempo;
+                clienteMasTiempoCola = c;
+            }
+        }
+
+        double promedioCola = totalCola / clientes.size() / 1000.0;
+        double maxCola = maxColaMS / 1000.0;
+
+        controller.setDatosEstadisticos(clientes, promedioCaja, promedioCola, maxCola);
+
+        Stage stage = new Stage();
+        stage.setTitle("Estadísticas");
+        stage.setScene(new Scene(root));
+        stage.show();
+
+        Stage currentStage = (Stage) mainPane.getScene().getWindow();
+        currentStage.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
 }

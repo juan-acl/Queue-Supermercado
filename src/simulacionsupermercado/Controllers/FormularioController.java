@@ -35,7 +35,7 @@ public class FormularioController {
             return;
         }
 
-        if (clientes.size() >= Constants.QUEUE_MAX_CLIENTS) {
+        if (clientes.size() > Constants.QUEUE_MAX_CLIENTS) {
             mostrarAlerta("Límite alcanzado", "Solo puedes agregar hasta 5 clientes.");
             return;
         }
