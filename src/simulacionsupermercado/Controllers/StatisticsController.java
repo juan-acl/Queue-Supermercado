@@ -13,13 +13,21 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+import javafx.stage.Stage;
+import simulacionsupermercado.SimulacionSupermercado;
 
+import java.io.IOException;
 
 public class StatisticsController {
+
     @FXML
-private BarChart<String, Number> barChartEstadisticas;
+    private BarChart<String, Number> barChartEstadisticas;
     @FXML
     private Label lblClientesAtendidos;
+    @FXML
+    private Button btnVolver;
     @FXML
     private Label lblTiempoPromCaja;
     @FXML
@@ -56,30 +64,41 @@ private BarChart<String, Number> barChartEstadisticas;
         );
     }
 
+    public void setDatosEstadisticos(List<Client> clientes, double promCaja, double promCola, double maxCola) {
+        lblClientesAtendidos.setText(String.valueOf(clientes.size()));
+        lblTiempoPromCaja.setText(String.format("%.2f s", promCaja));
+        lblTiempoPromCola.setText(String.format("%.2f s", promCola));
+        lblTiempoMaxCola.setText(String.format("%.2f s", maxCola));
+        
+        int contador = 1;
+        for (Client c : clientes) {
+            c.setCorrelativo(contador++);
+        }
+        tablaClientes.getItems().setAll(clientes);
 
-public void setDatosEstadisticos(List<Client> clientes, double promCaja, double promCola, double maxCola) {
-    lblClientesAtendidos.setText(String.valueOf(clientes.size()));
-    lblTiempoPromCaja.setText(String.format("%.2f s", promCaja));
-    lblTiempoPromCola.setText(String.format("%.2f s", promCola));
-    lblTiempoMaxCola.setText(String.format("%.2f s", maxCola));
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Tiempos");
 
-    // Correlativo y tabla
-    int contador = 1;
-    for (Client c : clientes) {
-        c.setCorrelativo(contador++);
+        series.getData().add(new XYChart.Data<>("Prom. Caja", promCaja));
+        series.getData().add(new XYChart.Data<>("Prom. Cola", promCola));
+        series.getData().add(new XYChart.Data<>("Máx. Cola", maxCola));
+
+        barChartEstadisticas.getData().clear();
+        barChartEstadisticas.getData().add(series);
     }
-    tablaClientes.getItems().setAll(clientes);
 
-    // === Gráfico de barras ===
-    XYChart.Series<String, Number> series = new XYChart.Series<>();
-    series.setName("Tiempos");
+    private SimulacionSupermercado mainApp;
 
-    series.getData().add(new XYChart.Data<>("Prom. Caja", promCaja));
-    series.getData().add(new XYChart.Data<>("Prom. Cola", promCola));
-    series.getData().add(new XYChart.Data<>("Máx. Cola", maxCola));
+    public void setMainApp(SimulacionSupermercado app) {
+        this.mainApp = app;
+    }
 
-    barChartEstadisticas.getData().clear();
-    barChartEstadisticas.getData().add(series);
-}
+    @FXML
+    private void volverAlFormulario(ActionEvent event) {
+        if (mainApp != null) {
+            mainApp.getViewForm(); 
+           
+        }
+    }
 
 }

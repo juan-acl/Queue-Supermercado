@@ -34,7 +34,7 @@
 
       <!-- Contenedor de colas -->
       <Pane fx:id="container_stack" layoutX="33.0" layoutY="76.0" prefHeight="118.0" prefWidth="853.0" style="-fx-background-color: transparent;" />
-      <Button layoutX="763.0" layoutY="544.0" mnemonicParsing="false" onAction="#viewStatistics" style="-fx-background-color: Green;" text="Estadisticas" textFill="WHITE">
+      <Button fx:id="btnEstadisticas" visible="false" layoutX="763.0" layoutY="544.0" mnemonicParsing="false" onAction="#viewStatistics" style="-fx-background-color: Green;" text="Estadisticas" textFill="WHITE">
          <font>
             <Font name="Times New Roman Bold" size="16.0" />
          </font>

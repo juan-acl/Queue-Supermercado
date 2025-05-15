@@ -66,6 +66,8 @@ public class SimulationController implements Initializable {
     private Label infoCaja1;
     @FXML
     private Label infoCaja2;
+    @FXML
+    private Button btnEstadisticas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -118,6 +120,8 @@ public class SimulationController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Todos los clientes han sido atendidos.");
                 alert.showAndWait();
+
+                btnEstadisticas.setVisible(true);
             }
             return;
         }
@@ -186,7 +190,7 @@ public class SimulationController implements Initializable {
     public void recibirClientes(List<Client> clientes) {
         this.clientesOriginales = clientes.toArray(new Client[0]);;
         this.colaClientes.clear();
-        for (int i = 0; i < clientes.size() ; i++) {
+        for (int i = 0; i < clientes.size(); i++) {
             Client c = clientes.get(i);
             double spacing = container_stack.getPrefWidth() / (Constants.QUEUE_MAX_CLIENTS + 1);
             double x = spacing * (i + 1);
@@ -208,51 +212,49 @@ public class SimulationController implements Initializable {
     }
 
     @FXML
- private void viewStatistics(ActionEvent event) {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulacionsupermercado/views/StatisticsView.fxml"));
-        Parent root = loader.load();
+    private void viewStatistics(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulacionsupermercado/views/StatisticsView.fxml"));
+            Parent root = loader.load();
 
-        StatisticsController controller = loader.getController();
+            StatisticsController controller = loader.getController();
+            controller.setMainApp(primaryStage); // Asegúrate de que esto se llame
 
-        List<Client> clientes = Arrays.asList(this.clientesOriginales);
+            List<Client> clientes = Arrays.asList(this.clientesOriginales);
 
-        int acumulador = 0;
-        for (Client c : clientes) {
-            c.setTiempoEnCola(acumulador);
-            acumulador += c.getDurationMS();
-        }
-
-        double promedioCaja = clientes.stream().mapToInt(Client::getDurationMS).average().orElse(0) / 1000.0;
-
-        double totalCola = 0;
-        int maxColaMS = 0;
-        Client clienteMasTiempoCola = null;
-
-        for (Client c : clientes) {
-            int tiempo = c.getTiempoEnCola();
-            totalCola += tiempo;
-            if (tiempo > maxColaMS) {
-                maxColaMS = tiempo;
-                clienteMasTiempoCola = c;
+            int acumulador = 0;
+            for (Client c : clientes) {
+                c.setTiempoEnCola(acumulador);
+                acumulador += c.getDurationMS();
             }
+
+            double promedioCaja = clientes.stream().mapToInt(Client::getDurationMS).average().orElse(0) / 1000.0;
+
+            double totalCola = 0;
+            int maxColaMS = 0;
+            Client clienteMasTiempoCola = null;
+
+            for (Client c : clientes) {
+                int tiempo = c.getTiempoEnCola();
+                totalCola += tiempo;
+                if (tiempo > maxColaMS) {
+                    maxColaMS = tiempo;
+                    clienteMasTiempoCola = c;
+                }
+            }
+
+            double promedioCola = totalCola / clientes.size() / 1000.0;
+            double maxCola = maxColaMS / 1000.0;
+
+            controller.setDatosEstadisticos(clientes, promedioCaja, promedioCola, maxCola);
+
+            Stage currentStage = (Stage) mainPane.getScene().getWindow();
+            currentStage.setTitle("Estadísticas");
+            currentStage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        double promedioCola = totalCola / clientes.size() / 1000.0;
-        double maxCola = maxColaMS / 1000.0;
-
-        controller.setDatosEstadisticos(clientes, promedioCaja, promedioCola, maxCola);
-
-        Stage stage = new Stage();
-        stage.setTitle("Estadísticas");
-        stage.setScene(new Scene(root));
-        stage.show();
-
-        Stage currentStage = (Stage) mainPane.getScene().getWindow();
-        currentStage.close();
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 
 }

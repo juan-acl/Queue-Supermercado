@@ -68,4 +68,9 @@ public class SimulacionSupermercado extends Application {
     public Stage getStage() {
         return this.stage;
     }
+    
+    public void volverAlFormulario() {
+    getViewForm(); // Mismo método que al iniciar
+}
+
 }

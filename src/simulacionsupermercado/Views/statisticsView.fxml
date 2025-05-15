@@ -4,6 +4,7 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -12,6 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="663.0" prefWidth="763.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simulacionsupermercado.Controllers.StatisticsController">
 
@@ -21,6 +23,11 @@
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
     <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Estadísticas del Simulacro" />
+         <Button mnemonicParsing="false" onAction="#volverAlFormulario" style="-fx-background-color: blue;" text="Regresar al Formulario" textFill="WHITE">
+            <font>
+               <Font name="Times New Roman Bold" size="14.0" />
+            </font>
+         </Button>
          <BarChart fx:id="barChartEstadisticas" prefHeight="130.0" prefWidth="693.0">
     <xAxis>
         <CategoryAxis side="BOTTOM" />
@@ -42,10 +49,10 @@
                 <Label text="Tiempo promedio por caja:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <Label fx:id="lblTiempoPromCaja" text="0 s" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Label text="Tiempo promedio en cola:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label text="Tiempo promedio en cola:" GridPane.rowIndex="2" />
                 <Label fx:id="lblTiempoPromCola" text="0 s" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <Label text="Máximo tiempo en cola:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Label text="Máximo tiempo en cola:" GridPane.rowIndex="3" />
                 <Label fx:id="lblTiempoMaxCola" text="0 s" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <rowConstraints>
                <RowConstraints />
@@ -68,5 +75,6 @@
             </columns>
         </TableView>
    </center>
+    <Button fx:id="btnVolver" onAction="#volverAlFormulario" text="Volver al formulario" />
 
 </BorderPane>
