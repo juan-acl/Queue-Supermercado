@@ -20,10 +20,15 @@ public class SimulacionSupermercado extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.stage = primaryStage;
-        getViewForm();
-        primaryStage.show();
-    }
+    this.stage = primaryStage;
+    this.stage.setTitle("Supermercado App");
+
+    getViewForm(); // o getSceneFormulario() según cómo la tengas
+
+    primaryStage.setMaximized(true);         // Pantalla completa
+    primaryStage.setResizable(true);         // Asegúrate que sea redimensionable
+    primaryStage.show();
+}
 
     public void SetTitle(String title) {
         this.stage.setTitle(title);

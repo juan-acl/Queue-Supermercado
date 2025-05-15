@@ -24,6 +24,7 @@ public class FormularioController {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
         articulosSpinner.setValueFactory(valueFactory);
     }
+    
 
     @FXML
     public void agregarCliente() {
@@ -59,6 +60,7 @@ public class FormularioController {
             e.printStackTrace();
         }
     }
+    
 
     public void SetPrimaryStage(SimulacionSupermercado simulacionSupermercado) {
         this.stage = simulacionSupermercado;
@@ -71,4 +73,4 @@ public class FormularioController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-}
+} 

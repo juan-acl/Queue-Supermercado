@@ -1,0 +1,45 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('/fonts/PressStart2P.ttf');
+}
+.root {
+    -fx-font-family: 'Press Start 2P', 'Courier New', monospace;
+    -fx-font-size: 18px; /* Aumentamos tamaño general */
+    -fx-background-image: url("/images/fondo_formulario.png");
+    -fx-background-size: cover;
+    -fx-padding: 20;
+}
+
+/* Botones */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #fefefe, #cccccc);
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px; /* Tamaño del texto */
+    -fx-padding: 10 25;  /* Espacio interno horizontal mayor */
+}
+
+/* Campos de texto y spinner */
+.text-field, .spinner {
+    -fx-font-size: 16px;
+    -fx-pref-height: 40;
+}
+
+/* ListView */
+.list-view {
+    -fx-font-size: 16px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-background-color: #f9f9f9;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
