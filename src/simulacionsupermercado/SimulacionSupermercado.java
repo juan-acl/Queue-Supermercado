@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
@@ -20,13 +21,17 @@ public class SimulacionSupermercado extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-    this.stage = primaryStage;
-    this.stage.setTitle("Supermercado App");
+        // ✅ Carga explícita de fuente antes de cualquier escena
+        Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), 12);
+        System.out.println("Fuente cargada: " + (font != null ? font.getName() : "❌ No se cargó la fuente"));
 
-    getViewForm(); // o getSceneFormulario() según cómo la tengas
+        this.stage = primaryStage;
+        this.stage.setTitle("Supermercado App");
 
-    primaryStage.setMaximized(true);         // Pantalla completa
-    primaryStage.setResizable(true);         // Asegúrate que sea redimensionable
+    getViewForm(); // carga la escena
+
+    primaryStage.setResizable(false); // Evita redimensionado
+    primaryStage.centerOnScreen();    // Centra la ventana
     primaryStage.show();
 }
 
@@ -60,11 +65,12 @@ public class SimulacionSupermercado extends Application {
     public <T> T getSceneFXML(String viewfxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(PATH_VIEW + viewfxml));
         AnchorPane root = loader.load();
-        scene = new Scene(root, 900, 600);
+        scene = new Scene(root, 900, 600); // mantiene tu tamaño actual
         scene.getStylesheets().add(getClass().getResource("/css/estilos.css").toExternalForm());
+        System.out.println("CSS cargado: " + getClass().getResource("/css/estilos.css"));
         stage.setScene(scene);
         return loader.getController();
-    }
+}
 
     public static void main(String[] args) {
         launch(args);

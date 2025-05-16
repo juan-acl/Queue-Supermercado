@@ -9,7 +9,6 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -18,6 +17,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
 import simulacionsupermercado.SimulacionSupermercado;
 import queue.Client;
@@ -71,8 +72,15 @@ public class SimulationController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Platform.runLater(() -> {
+    if (mainPane.getScene() != null) {
+        System.out.println("Estilos aplicados:");
+        mainPane.getScene().getStylesheets().forEach(System.out::println);
+    }
+});
 
     }
+    
 
     @FXML
     public void pausarOReanudarSimulacion() {
@@ -115,16 +123,19 @@ public class SimulationController implements Initializable {
 
         if (colaClientes.isEmpty()) {
             if (caja1Libre && caja2Libre) {
+                Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Simulación finalizada");
                 alert.setHeaderText(null);
                 alert.setContentText("Todos los clientes han sido atendidos.");
                 alert.showAndWait();
 
+                // Mostrar botón de estadísticas después del alert
                 btnEstadisticas.setVisible(true);
-            }
-            return;
-        }
+        });
+    }
+    return;
+}
 
         while ((!colaClientes.isEmpty()) && (caja1Libre || caja2Libre)) {
             ClientVisual cliente = colaClientes.poll();
@@ -140,53 +151,74 @@ public class SimulationController implements Initializable {
         }
     }
 
-    private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor, Label info, int numeroCaja) {
-        if (cliente == null) {
-            // Validamos porque se cambio de una lista enlazada con un tama;o ajustable a uno fijo
-            return;
-        }
-        ImageView imagen = cliente.getImagen();
-        TranslateTransition trans = new TranslateTransition(Duration.seconds(1.5), imagen);
-        double destinoX = caja.getLayoutX() + 180 - imagen.getLayoutX();
-        double destinoY = caja.getLayoutY() + 100 - imagen.getLayoutY();
-        trans.setToX(destinoX);
-        trans.setToY(destinoY);
+private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor, Label info, int numeroCaja) {
+    if (cliente == null) return;
 
-        trans.setOnFinished(e -> {
-            imagen.setVisible(false);
-            visor.setImage(imagen.getImage());
-            visor.setVisible(true);
+    ImageView imagen = cliente.getImagen();
+    Client datos = cliente.getDatos();
 
-            Client datos = cliente.getDatos();
-            info.setText(datos.getNombre() + " - " + datos.getQuantity() + " artículos");
-            info.setVisible(true);
+    // Crear el cronómetro antes de la animación
+    Label cronometro = new Label();
+    cronometro.getStyleClass().add("cronometro");
+    cronometro.setStyle("-fx-font-family: 'Press Start 2P'; -fx-font-size: 10px;");
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            String horaActual = LocalTime.now().format(formatter);
-            datos.setHoraAtencion(horaActual);
-            new Thread(() -> {
-                try {
-                    Thread.sleep(datos.getDurationMS());
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+    String nombre = datos.getNombre();
+    int articulos = datos.getQuantity();
+    int duracion = datos.getDurationMS() / 1000;
+    cronometro.setText(nombre + " - " + articulos + " artículos\n⏳ " + duracion + "s");
 
-                Platform.runLater(() -> {
-                    visor.setVisible(false);
-                    info.setVisible(false);
-                    if (numeroCaja == 1) {
-                        caja1Libre = true;
-                    } else {
-                        caja2Libre = true;
-                    }
-                    asignarClienteACaja();
-                });
-            }).start();
+    // Posicionarlo inicialmente encima del cliente
+    double initialX = imagen.getLayoutX() + imagen.getFitWidth() / 2 - 50;
+    double initialY = imagen.getLayoutY() - 25;
+    cronometro.setLayoutX(initialX);
+    cronometro.setLayoutY(initialY);
+    container_stack.getChildren().add(cronometro);
+
+    // Animación de movimiento de la imagen del cliente
+    TranslateTransition trans = new TranslateTransition(Duration.seconds(1.5), imagen);
+    double destinoX = caja.getLayoutX() + 180 - imagen.getLayoutX();
+    double destinoY = caja.getLayoutY() + 100 - imagen.getLayoutY();
+    trans.setToX(destinoX);
+    trans.setToY(destinoY);
+
+    // Animación sincronizada del cronómetro
+    TranslateTransition textoAnim = new TranslateTransition(Duration.seconds(1.5), cronometro);
+    textoAnim.setToX(destinoX + imagen.getFitWidth() / 2 - 175); // ajustar para que siga encima
+    textoAnim.setToY(destinoY - 70); // mantenerlo arriba del cliente
+
+    trans.setOnFinished(e -> {
+        imagen.setVisible(false);
+        visor.setImage(imagen.getImage());
+        visor.setVisible(true);
+
+        // Guardar hora
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String horaActual = LocalTime.now().format(formatter);
+        datos.setHoraAtencion(horaActual);
+
+        // Cronómetro en cuenta regresiva
+        IntegerProperty tiempoRestante = new SimpleIntegerProperty(duracion);
+        Timeline timeline = new Timeline(
+            new KeyFrame(Duration.seconds(1), event -> {
+                tiempoRestante.set(tiempoRestante.get() - 1);
+                cronometro.setText(nombre + " - " + articulos + " artículos\n⏳ " + tiempoRestante.get() + "s");
+            })
+        );
+        timeline.setCycleCount(duracion);
+        timeline.setOnFinished(ev -> {
+            container_stack.getChildren().remove(cronometro);
+            visor.setVisible(false);
+            if (numeroCaja == 1) caja1Libre = true;
+            else caja2Libre = true;
+            asignarClienteACaja();
         });
 
-        trans.play();
-    }
+        timeline.play();
+    });
 
+    trans.play();
+    textoAnim.play();
+}
     public void recibirClientes(List<Client> clientes) {
         this.clientesOriginales = clientes.toArray(new Client[0]);;
         this.colaClientes.clear();
