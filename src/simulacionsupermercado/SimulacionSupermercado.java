@@ -24,7 +24,6 @@ public class SimulacionSupermercado extends Application {
         // ✅ Carga explícita de fuente antes de cualquier escena
         Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), 12);
         System.out.println("Fuente cargada: " + (font != null ? font.getName() : "❌ No se cargó la fuente"));
-
         this.stage = primaryStage;
         this.stage.setTitle("Supermercado App");
 

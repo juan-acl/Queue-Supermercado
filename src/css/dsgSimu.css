@@ -1,0 +1,46 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('/fonts/PressStart2P.ttf');
+}
+.root {
+    -fx-font-family: 'Press Start 2P', 'Courier New', monospace;
+    -fx-font-size: 10px; /* Aumentamos tamaño general */
+    -fx-background-size: cover;
+    -fx-padding: 20;
+}
+
+.fondo-pane {
+    -fx-background-image: url("/images/fondo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+/* Botones */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #fefefe, #cccccc);
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px; /* Tamaño del texto */
+    -fx-padding: 5 15;  /* Espacio interno horizontal mayor */
+}
+
+
+
+/* ListView */
+.list-view {
+    -fx-font-size: 8px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-background-color: #f9f9f9;
+}
+
+/* Labels */
+.label {
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}

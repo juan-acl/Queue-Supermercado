@@ -69,11 +69,13 @@ public class SimulationController implements Initializable {
     private Label infoCaja2;
     @FXML
     private Button btnEstadisticas;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Platform.runLater(() -> {
     if (mainPane.getScene() != null) {
+        // Verificacion de que se aplican las clases del .css
         System.out.println("Estilos aplicados:");
         mainPane.getScene().getStylesheets().forEach(System.out::println);
     }
@@ -95,10 +97,10 @@ public class SimulationController implements Initializable {
 
     @FXML
     public void reiniciarSimulacion() {
-        // 1. Limpiar el contenedor visual de clientes
+        //Limpiar el contenedor visual de clientes
         container_stack.getChildren().removeIf(n -> n instanceof ImageView && n != valueRegister1 && n != valueRegister2);
 
-        // 2. Limpiar estado de cajas y etiquetas
+        //Limpiar estado de cajas y etiquetas para evitar duplicacion de info
         valueRegister1.setVisible(false);
         valueRegister2.setVisible(false);
         infoCaja1.setVisible(false);
@@ -107,11 +109,11 @@ public class SimulationController implements Initializable {
         caja2Libre = true;
         simulacionPausada = false;
 
-        // 3. Limpiar cola y contador
+        //Limpiar cola y contador
         colaClientes.clear();
         countQueue.set(0);
 
-        // 4. Volver a cargar los clientes originales
+        //Vuelve a cargar los clientes originales
         recibirClientes(Arrays.asList(this.clientesOriginales));
 
     }
@@ -122,6 +124,7 @@ public class SimulationController implements Initializable {
         }
 
         if (colaClientes.isEmpty()) {
+            //Indica cuando ya mo hay clientes en cola, por ende manda la alerta
             if (caja1Libre && caja2Libre) {
                 Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -136,7 +139,7 @@ public class SimulationController implements Initializable {
     }
     return;
 }
-
+        //while que se encarga de asignar el cliente segun disponibilidad de caja
         while ((!colaClientes.isEmpty()) && (caja1Libre || caja2Libre)) {
             ClientVisual cliente = colaClientes.poll();
             countQueue.set(countQueue.get() - 1);
@@ -150,7 +153,7 @@ public class SimulationController implements Initializable {
             }
         }
     }
-
+//metodo para realizar el desplazamiento visual de lo clinetes desde el pane a las cajas
 private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor, Label info, int numeroCaja) {
     if (cliente == null) return;
 
@@ -183,8 +186,8 @@ private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor,
 
     // Animación sincronizada del cronómetro
     TranslateTransition textoAnim = new TranslateTransition(Duration.seconds(1.5), cronometro);
-    textoAnim.setToX(destinoX + imagen.getFitWidth() / 2 - 175); // ajustar para que siga encima
-    textoAnim.setToY(destinoY - 70); // mantenerlo arriba del cliente
+    textoAnim.setToX(destinoX + imagen.getFitWidth() / 2 - 225); // ajustar para que siga encima
+    textoAnim.setToY(destinoY - 175); // mantenerlo arriba del cliente
 
     trans.setOnFinished(e -> {
         imagen.setVisible(false);
@@ -219,6 +222,7 @@ private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor,
     trans.play();
     textoAnim.play();
 }
+    //metodo en donde se guardan los clientes de manera visual en el pane provenientes de la cola
     public void recibirClientes(List<Client> clientes) {
         this.clientesOriginales = clientes.toArray(new Client[0]);;
         this.colaClientes.clear();
@@ -242,7 +246,7 @@ private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor,
     public void SetPrimaryStage(SimulacionSupermercado simulacionSupermercado) {
         this.primaryStage = simulacionSupermercado;
     }
-
+    //metodo para mostrar el boton de estadisticas y que redirija a la vista
     @FXML
     private void viewStatistics(ActionEvent event) {
         try {
@@ -250,7 +254,7 @@ private void moverClienteACaja(ClientVisual cliente, Pane caja, ImageView visor,
             Parent root = loader.load();
 
             StatisticsController controller = loader.getController();
-            controller.setMainApp(primaryStage); // Asegúrate de que esto se llame
+            controller.setMainApp(primaryStage);
 
             List<Client> clientes = Arrays.asList(this.clientesOriginales);
 
