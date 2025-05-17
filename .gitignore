@@ -1,3 +1,24 @@
+# Ignorar carpetas de compilación
 /build/
 /dist/
-/src/images/Queue-Supermercado-master/Queue-Supermercado-master/nbproject/private/
+
+# Ignorar archivos de configuración privada de NetBeans
+/nbproject/private/
+/nbbuild/
+/nbdist/
+
+# Ignorar otros archivos generados
+*.class
+*.log
+*.bak
+*.tmp
+*.swp
+*.DS_Store
+*.iml
+
+# Ignorar todo menos el código fuente
+!/src/
+
+# Ignorar todo nbproject excepto project.xml (opcional)
+nbproject/*
+!nbproject/project.xml

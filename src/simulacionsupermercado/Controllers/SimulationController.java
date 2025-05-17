@@ -76,7 +76,6 @@ public class SimulationController implements Initializable {
         Platform.runLater(() -> {
     if (mainPane.getScene() != null) {
         // Verificacion de que se aplican las clases del .css
-        System.out.println("Estilos aplicados:");
         mainPane.getScene().getStylesheets().forEach(System.out::println);
     }
 });

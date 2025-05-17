@@ -66,7 +66,6 @@ public class SimulacionSupermercado extends Application {
         AnchorPane root = loader.load();
         scene = new Scene(root, 900, 600); // mantiene tu tamaño actual
         scene.getStylesheets().add(getClass().getResource("/css/estilos.css").toExternalForm());
-        System.out.println("CSS cargado: " + getClass().getResource("/css/estilos.css"));
         stage.setScene(scene);
         return loader.getController();
 }
