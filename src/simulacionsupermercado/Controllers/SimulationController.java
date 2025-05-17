@@ -98,7 +98,8 @@ public class SimulationController implements Initializable {
     @FXML
     public void reiniciarSimulacion() {
         //Limpiar el contenedor visual de clientes
-        container_stack.getChildren().removeIf(n -> n instanceof ImageView && n != valueRegister1 && n != valueRegister2);
+        container_stack.getChildren().removeIf(n -> 
+        (n instanceof ImageView && n != valueRegister1 && n != valueRegister2) || (n instanceof Label && n.getStyleClass().contains("cronometro")));
 
         //Limpiar estado de cajas y etiquetas para evitar duplicacion de info
         valueRegister1.setVisible(false);
