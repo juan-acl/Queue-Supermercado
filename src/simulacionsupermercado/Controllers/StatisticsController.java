@@ -11,14 +11,9 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import java.util.List;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
-import javafx.stage.Stage;
 import simulacionsupermercado.SimulacionSupermercado;
-
-import java.io.IOException;
 
 public class StatisticsController {
 
