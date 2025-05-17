@@ -46,6 +46,7 @@ public class FormularioController {
         clientes.add(cliente);
         clientesList.getItems().add(nombre + " - " + articulos + " artículos - NIT: " + nit);
         nombreField.clear();
+        articulosSpinner.getValueFactory().setValue(1);
     }
 
     @FXML
